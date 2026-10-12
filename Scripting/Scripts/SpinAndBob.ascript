@@ -1,0 +1,25 @@
+// Sample script: spins its owner and can be fired from events.
+component SpinAndBob : Update {
+    @field("Spin Speed (deg/s)")  float spinSpeed = 45.0;
+    @field("Spin Axis")           vec3  spinAxis = vec3(0.0, 1.0, 0.0);
+    @field("Bob Height")          float bobHeight = 0.5;
+    @field("Bob Frequency")       float bobFrequency = 1.0;
+    @field("Enabled")             bool  enabled = true;
+    @field("Tag")                 string tag = "sample";
+    @field("Spin Count")          int   spinCount = 0;
+
+    float time = 0.0;             // not exposed
+    float baseY = 0.0;
+
+    on Update(dt) {
+        if (!enabled) { return; }
+        time = time + dt;
+        owner.transform.rotate(spinAxis, spinSpeed * dt);
+        owner.transform.position.y = baseY + cos(time * bobFrequency) * bobHeight;
+    }
+
+    @method fn resetTime() {
+        time = 0.0;
+        spinCount = spinCount + 1;
+    }
+}
